@@ -6,6 +6,7 @@ import TacticsBoard, { FORMATION_COORDINATES } from "./components/TacticsBoard";
 import MatchSimulator from "./components/MatchSimulator";
 import TeamWorkspace from "./components/TeamWorkspace";
 import ExploreCommunity from "./components/ExploreCommunity";
+import { ToastProvider } from "./components/Toast";
 
 const INITIAL_SQUAD: Player[] = [
   { id: "player-1", name: "Ederson", number: 1, role: "GK", positionName: "GK", x: 50, y: 92 },
@@ -260,6 +261,7 @@ export default function App() {
   const activeTacticObj = tactics.find(t => t.id === activeTacticId) || null;
 
   return (
+    <ToastProvider>
     <div className="flex h-screen w-screen overflow-hidden bg-gray-950 font-sans text-gray-200">
       {currentView !== "board" && (
         <Sidebar
@@ -335,5 +337,6 @@ export default function App() {
         )}
       </main>
     </div>
+    </ToastProvider>
   );
 }

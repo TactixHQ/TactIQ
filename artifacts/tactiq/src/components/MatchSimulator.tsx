@@ -200,25 +200,28 @@ export default function MatchSimulator() {
   };
 
   return (
-    <div className="space-y-8 animate-fade-in p-6 max-w-7xl mx-auto text-gray-100">
+    <div className="space-y-7 animate-fade-in p-5 md:p-7 max-w-6xl mx-auto text-gray-100 pb-24 md:pb-8">
       
-      {/* Header and Pitch Matchup title */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-gray-800 pb-6">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-gray-800/80 pb-6">
         <div>
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 bg-amber-950/40 px-2.5 py-1 rounded border border-amber-900/40">
-            NORTH STAR FEATURE — Match Simulator
-          </span>
-          <h1 className="text-3xl font-display font-bold tracking-tight text-white mt-3">
-            AI Matchup Simulator
+          <div className="flex items-center gap-2 mb-2">
+            <Zap className="w-4 h-4 text-amber-400" />
+            <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-amber-400">
+              AI Match Simulator
+            </span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-display font-bold tracking-tight text-white">
+            Matchup Analyzer
           </h1>
           <p className="text-sm text-gray-400 mt-1">
-            Analyze why one football system beats another before stepping onto the pitch.
+            Understand why one system beats another before stepping onto the pitch.
           </p>
         </div>
       </div>
 
       {/* Inputs Configuration Panel */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-gray-900/40 rounded-xl border border-gray-800 p-6 shadow-xl">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-gray-900 rounded-xl border border-gray-800/80 p-5 md:p-6 shadow-sm">
         
         {/* Home Team controls */}
         <div className="space-y-4 border-b lg:border-b-0 lg:border-r border-gray-800 pb-6 lg:pb-0 lg:pr-6">

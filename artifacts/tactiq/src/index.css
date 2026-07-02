@@ -9,6 +9,18 @@
   --color-pitch-green: #1a4329;
   --color-pitch-grass: #225a37;
   --color-pitch-line: rgba(255, 255, 255, 0.45);
+
+  --color-gray-850: #1a1f2e;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .football-pitch {

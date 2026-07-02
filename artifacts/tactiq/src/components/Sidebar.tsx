@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { 
-  Home, 
-  LayoutGrid, 
-  Zap, 
-  Users, 
-  Compass, 
-  Sparkles, 
-  User, 
-  Menu, 
-  X,
+import {
+  Home,
+  LayoutGrid,
+  Zap,
+  Users,
+  Compass,
+  Sparkles,
+  User,
+  ChevronLeft,
+  ChevronRight,
   Hexagon
 } from "lucide-react";
 
@@ -28,55 +28,53 @@ export default function Sidebar({
   const [expanded, setExpanded] = useState<boolean>(true);
 
   const navItems = [
-    { id: "home", label: "Home", icon: Home, desc: "Match Brain + daily insights" },
-    { id: "board", label: "Board", icon: LayoutGrid, desc: "Open tactics canvas" },
-    { id: "simulator", label: "Simulator", icon: Zap, desc: "AI Match Simulator" },
-    { id: "team", label: "Team", icon: Users, desc: "Your squad workspace" },
-    { id: "explore", label: "Explore", icon: Compass, desc: "Community & challenges" },
+    { id: "home",      label: "Home",      icon: Home,        desc: "Dashboard & AI insights" },
+    { id: "board",     label: "Board",     icon: LayoutGrid,  desc: "Tactics canvas" },
+    { id: "simulator", label: "Simulator", icon: Zap,         desc: "AI match simulator" },
+    { id: "team",      label: "Team",      icon: Users,       desc: "Squad workspace" },
+    { id: "explore",   label: "Explore",   icon: Compass,     desc: "Community tactics" },
   ];
 
   return (
     <>
-      {/* DESKTOP SIDEBAR - Persistent Left Rail */}
-      <aside 
-        className={`hidden md:flex flex-col justify-between border-r border-gray-800 bg-gray-950/95 text-gray-400 h-screen transition-all duration-300 shrink-0 select-none ${
-          expanded ? "w-64" : "w-16"
+      {/* ── DESKTOP SIDEBAR ── */}
+      <aside
+        className={`hidden md:flex flex-col justify-between border-r border-gray-800/80 bg-gray-950 h-screen transition-all duration-300 ease-in-out shrink-0 select-none ${
+          expanded ? "w-60" : "w-[60px]"
         }`}
+        aria-label="Main navigation"
       >
-        {/* Top Header */}
+        {/* Logo */}
         <div>
-          <div className="flex items-center justify-between p-4 border-b border-gray-800 h-16">
-            <div className="flex items-center gap-2.5 truncate">
-              <div className="text-emerald-400 p-1 bg-emerald-950/50 rounded-lg border border-emerald-900/40">
-                <Hexagon className="w-5 h-5 fill-emerald-400/10" />
+          <div className={`flex items-center h-14 border-b border-gray-800/80 px-3.5 ${expanded ? "justify-between" : "justify-center"}`}>
+            <button
+              onClick={() => onNavigate("home")}
+              className="flex items-center gap-2.5 min-w-0 cursor-pointer"
+              aria-label="Go to home"
+            >
+              <div className="shrink-0 text-emerald-400 p-1.5 bg-emerald-950/60 rounded-lg border border-emerald-900/50">
+                <Hexagon className="w-4 h-4" />
               </div>
               {expanded && (
-                <span className="font-display font-bold text-lg text-white tracking-tight">
+                <span className="font-display font-bold text-base text-white tracking-tight truncate">
                   TactIQ
                 </span>
               )}
-            </div>
-            {expanded ? (
-              <button 
-                id="btn-collapse-sidebar"
+            </button>
+
+            {expanded && (
+              <button
                 onClick={() => setExpanded(false)}
-                className="p-1 hover:text-white rounded hover:bg-gray-900 cursor-pointer hidden xl:block"
+                className="p-1.5 rounded-md text-gray-600 hover:text-gray-300 hover:bg-gray-900 transition cursor-pointer"
+                aria-label="Collapse sidebar"
               >
-                <X className="w-4 h-4" />
-              </button>
-            ) : (
-              <button 
-                id="btn-expand-sidebar"
-                onClick={() => setExpanded(true)}
-                className="p-1 hover:text-white rounded hover:bg-gray-900 mx-auto cursor-pointer hidden xl:block"
-              >
-                <Menu className="w-4 h-4" />
+                <ChevronLeft className="w-4 h-4" />
               </button>
             )}
           </div>
 
-          {/* Navigation Links */}
-          <nav className="p-3 space-y-1">
+          {/* Nav items */}
+          <nav className="p-2 space-y-0.5 mt-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentView === item.id;
@@ -85,26 +83,34 @@ export default function Sidebar({
                   id={`nav-item-${item.id}`}
                   key={item.id}
                   onClick={() => onNavigate(item.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all group relative cursor-pointer ${
+                  title={!expanded ? item.label : undefined}
+                  aria-label={item.label}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`w-full flex items-center gap-3 rounded-lg text-sm font-medium transition-all cursor-pointer group ${
+                    expanded ? "px-3 py-2.5" : "px-0 py-2.5 justify-center"
+                  } ${
                     isActive
-                      ? "text-white bg-emerald-950/30 border-l-2 border-emerald-500 rounded-l-none pl-2.5"
-                      : "hover:text-white hover:bg-gray-900"
+                      ? "bg-emerald-950/40 text-white"
+                      : "text-gray-400 hover:text-white hover:bg-gray-900/80"
                   }`}
-                  title={!expanded ? item.label : ""}
                 >
-                  <Icon className={`w-5 h-5 shrink-0 ${isActive ? "text-emerald-400" : "text-gray-400 group-hover:text-emerald-300"}`} />
+                  <Icon
+                    className={`shrink-0 transition-colors ${expanded ? "w-4 h-4" : "w-5 h-5"} ${
+                      isActive ? "text-emerald-400" : "group-hover:text-emerald-300"
+                    }`}
+                  />
                   {expanded && (
-                    <div className="text-left leading-tight truncate">
-                      <div className="font-semibold">{item.label}</div>
-                      <div className="text-[10px] text-gray-500 font-normal truncate max-w-[170px]">
+                    <div className="text-left leading-tight truncate min-w-0">
+                      <div className={`font-semibold text-sm ${isActive ? "text-white" : ""}`}>
+                        {item.label}
+                      </div>
+                      <div className="text-[10px] text-gray-500 font-normal truncate">
                         {item.desc}
                       </div>
                     </div>
                   )}
-                  
-                  {/* Active Green dot collapsed indicator */}
-                  {!expanded && isActive && (
-                    <span className="absolute right-1.5 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-emerald-400 rounded-full" />
+                  {isActive && !expanded && (
+                    <span className="sr-only">(active)</span>
                   )}
                 </button>
               );
@@ -112,47 +118,67 @@ export default function Sidebar({
           </nav>
         </div>
 
-        {/* Bottom Utility Rail */}
-        <div className="p-3 border-t border-gray-900 space-y-1 bg-gray-950/40">
-          {/* Pro Upgrade Flag */}
+        {/* Bottom rail */}
+        <div className="p-2 border-t border-gray-800/80 space-y-0.5 pb-3">
+          {!expanded && (
+            <button
+              onClick={() => setExpanded(true)}
+              className="w-full flex justify-center p-2.5 rounded-lg text-gray-600 hover:text-gray-300 hover:bg-gray-900 transition cursor-pointer mb-1"
+              aria-label="Expand sidebar"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          )}
+
+          {/* Pro badge */}
           <button
             id="btn-sidebar-pro"
             onClick={onTogglePro}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all group relative cursor-pointer ${
-              isPro 
-                ? "text-amber-400 bg-amber-950/20 hover:bg-amber-950/30 border border-amber-900/30" 
-                : "text-emerald-400 bg-emerald-950/20 hover:bg-emerald-950/30 border border-emerald-900/30"
+            title={!expanded ? (isPro ? "Pro Active" : "Upgrade to Pro") : undefined}
+            className={`w-full flex items-center gap-3 rounded-lg text-sm font-medium transition cursor-pointer ${
+              expanded ? "px-3 py-2.5" : "px-0 py-2.5 justify-center"
+            } ${
+              isPro
+                ? "text-amber-400 bg-amber-950/25 hover:bg-amber-950/40 border border-amber-900/30"
+                : "text-emerald-400 bg-emerald-950/20 hover:bg-emerald-950/35 border border-emerald-900/30"
             }`}
           >
-            <Sparkles className="w-5 h-5 text-amber-400 shrink-0 animate-pulse" />
+            <Sparkles className={`shrink-0 ${expanded ? "w-4 h-4" : "w-5 h-5"} ${isPro ? "text-amber-400" : "text-emerald-400"}`} />
             {expanded && (
               <div className="text-left truncate">
-                <div className="font-bold text-xs">
-                  {isPro ? "Pro Plan Active" : "Upgrade to Pro"}
-                </div>
+                <div className="font-bold text-xs">{isPro ? "Pro Plan Active" : "Upgrade to Pro"}</div>
                 <div className="text-[10px] text-gray-400 font-normal">
-                  {isPro ? "Unlimited AI + Exports" : "Unlock Simulation Hub"}
+                  {isPro ? "Unlimited AI access" : "Unlock all features"}
                 </div>
               </div>
             )}
           </button>
 
-          <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-900 cursor-pointer">
-            <User className="w-5 h-5 text-gray-400" />
+          {/* Profile */}
+          <div
+            className={`flex items-center gap-3 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-900/80 transition cursor-pointer ${
+              expanded ? "px-3 py-2.5" : "px-0 py-2.5 justify-center"
+            }`}
+            title={!expanded ? "Profile" : undefined}
+          >
+            <div className={`shrink-0 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center ${expanded ? "w-6 h-6" : "w-7 h-7"}`}>
+              <User className="w-3.5 h-3.5 text-gray-400" />
+            </div>
             {expanded && (
-              <div className="text-left leading-tight">
-                <div className="font-semibold text-xs text-gray-200 truncate max-w-[120px]">
-                  Coach Marcus
-                </div>
-                <div className="text-[10px] text-gray-500">grassroots@tactiq.ai</div>
+              <div className="text-left leading-tight min-w-0">
+                <div className="font-semibold text-xs text-gray-200 truncate">My Profile</div>
+                <div className="text-[10px] text-gray-500">Coach account</div>
               </div>
             )}
           </div>
         </div>
       </aside>
 
-      {/* MOBILE NAV - Bottom Tab Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-gray-950 border-t border-gray-800 z-50 flex items-center justify-around px-2 text-gray-400 select-none">
+      {/* ── MOBILE BOTTOM TAB BAR ── */}
+      <nav
+        className="md:hidden fixed bottom-0 inset-x-0 h-16 bg-gray-950/98 backdrop-blur-sm border-t border-gray-800/80 z-50 flex items-center justify-around px-1 select-none"
+        aria-label="Mobile navigation"
+      >
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = currentView === item.id;
@@ -161,29 +187,23 @@ export default function Sidebar({
               id={`mobile-nav-${item.id}`}
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`flex flex-col items-center justify-center gap-1 w-12 py-1 relative cursor-pointer ${
-                isActive ? "text-emerald-400 font-medium" : "hover:text-gray-200"
+              aria-label={item.label}
+              aria-current={isActive ? "page" : undefined}
+              className={`flex flex-col items-center justify-center gap-1 flex-1 py-2 relative transition-colors cursor-pointer ${
+                isActive ? "text-emerald-400" : "text-gray-500 active:text-gray-200"
               }`}
             >
-              <Icon className="w-5 h-5" />
-              <span className="text-[10px]">{item.label}</span>
               {isActive && (
-                <span className="absolute -top-1 w-5 h-0.5 bg-emerald-400 rounded-full" />
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-emerald-400 rounded-full" />
               )}
+              <Icon className={`transition-transform ${isActive ? "w-5 h-5 scale-110" : "w-5 h-5"}`} />
+              <span className={`text-[9px] font-medium ${isActive ? "text-emerald-400" : "text-gray-500"}`}>
+                {item.label}
+              </span>
             </button>
           );
         })}
-        {/* Quick Pro toggler on mobile */}
-        <button
-          onClick={onTogglePro}
-          className={`flex flex-col items-center justify-center gap-1 w-12 py-1 cursor-pointer ${
-            isPro ? "text-amber-400" : "text-emerald-500"
-          }`}
-        >
-          <Sparkles className="w-5 h-5 animate-pulse" />
-          <span className="text-[10px]">{isPro ? "Pro" : "Free"}</span>
-        </button>
-      </div>
+      </nav>
     </>
   );
 }
