@@ -11,9 +11,7 @@ import {
   Activity, 
   BookOpen,
   CheckCircle,
-  HelpCircle,
-  Download,
-  FolderDown
+  HelpCircle
 } from "lucide-react";
 import { FootballMatch, Tactic } from "../types";
 
@@ -123,15 +121,6 @@ export default function HomeDashboard({
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <a
-            id="btn-header-export-zip"
-            href="/api/export-project"
-            download="tactiq-football-tactics.zip"
-            className="flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-gray-800 border border-gray-800 text-gray-200 rounded-lg text-sm font-medium transition cursor-pointer shadow-md"
-          >
-            <Download className="w-4 h-4 text-emerald-400" />
-            <span>Export ZIP</span>
-          </a>
           <button 
             id="btn-quick-new-tactic"
             onClick={() => onNewTactic()}
@@ -345,44 +334,6 @@ export default function HomeDashboard({
         </button>
       </div>
 
-      {/* CODEBASE EXPORT FOR IPHONE & WEB */}
-      <div className="bg-emerald-950/20 rounded-xl border border-emerald-900/40 p-6 shadow-lg">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="flex items-start gap-4">
-            <div className="p-3 bg-emerald-950 text-emerald-400 border border-emerald-800/50 rounded-lg shrink-0">
-              <FolderDown className="w-6 h-6" />
-            </div>
-            <div>
-              <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 font-bold">
-                iPhone / Mobile Source Exporter
-              </span>
-              <h3 className="text-lg font-bold text-white mt-1">
-                Export Full Editable Codebase
-              </h3>
-              <p className="text-sm text-gray-300 mt-1">
-                Get the complete project containing <strong>index.html</strong>, <strong>index.css</strong>, and the <strong>source code</strong> cleanly organized. 
-              </p>
-              <div className="mt-2.5 p-3 bg-gray-900/80 border border-gray-800 rounded-lg text-xs text-gray-400 space-y-1">
-                <p className="font-semibold text-emerald-400 font-mono">📱 iPhone / Safari Instructions:</p>
-                <ol className="list-decimal pl-4 space-y-0.5 font-mono">
-                  <li>Tap the <span className="text-white font-bold">Download Codebase</span> button.</li>
-                  <li>Safari will ask: <em>"Do you want to download 'tactiq-football-tactics.zip'?"</em> — Select <span className="text-white font-bold">Download</span>.</li>
-                  <li>Open the native <span className="text-white font-bold">Files app</span> on your iPhone and go to <span className="text-white font-bold">Downloads</span> to locate and open the ZIP.</li>
-                </ol>
-              </div>
-            </div>
-          </div>
-          <a 
-            id="btn-bottom-export-zip"
-            href="/api/export-project"
-            download="tactiq-football-tactics.zip"
-            className="w-full md:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold rounded-lg text-center transition shrink-0 shadow-md flex items-center justify-center gap-2"
-          >
-            <Download className="w-4 h-4" />
-            <span>Download Codebase ZIP</span>
-          </a>
-        </div>
-      </div>
     </div>
   );
 }
