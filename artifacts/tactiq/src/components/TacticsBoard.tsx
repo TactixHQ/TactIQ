@@ -1443,44 +1443,53 @@ export default function TacticsBoard({
           )}
         </div>
 
-        {/* Quick Suggestion buttons */}
-        <div className="p-3 bg-gray-950/80 border-t border-gray-900/60 space-y-2">
-          <span className="text-[9px] font-mono text-gray-500 block uppercase tracking-wider">
-            Quick Analysis Prompts
+        {/* Quick Suggestion chips */}
+        <div className="px-3 pt-3 pb-2 border-t border-gray-900/60 bg-gray-950/60">
+          <span className="text-[9px] font-mono text-gray-500 block uppercase tracking-wider mb-2">
+            Quick Prompts — tap to ask
           </span>
           <div className="flex flex-wrap gap-1.5">
-            <button
-              onClick={() => handleSendChat("Analyze my active midfield shape for space vulnerabilities.")}
-              className="px-2.5 py-1 text-[10px] font-medium rounded-full bg-gray-900 hover:bg-gray-800 text-gray-300 cursor-pointer border border-gray-850"
-            >
-              Analyze midfield space
-            </button>
-            <button
-              onClick={() => handleSendChat("How does my defensive line height compare to 4-3-3 high blocks?")}
-              className="px-2.5 py-1 text-[10px] font-medium rounded-full bg-gray-900 hover:bg-gray-800 text-gray-300 cursor-pointer border border-gray-850"
-            >
-              Compare defense line
-            </button>
+            {[
+              { label: "Analyze midfield shape",   prompt: "Analyze my current midfield shape and identify space vulnerabilities." },
+              { label: "Compare defense line",     prompt: "How does my defensive line height compare to a 4-3-3 high block?" },
+              { label: "Striker movement tips",    prompt: "How can my striker make better runs to stay involved and beat the offside trap?" },
+              { label: "Counter-attack options",   prompt: "What counter-attack triggers should my team look for from this formation?" },
+              { label: "Press trigger zones",      prompt: "Where are the best press trigger zones on the pitch given my formation?" },
+              { label: "Fix wide overloads",       prompt: "My wide players are getting overloaded defensively. What adjustments do you suggest?" },
+              { label: "Set piece routine idea",   prompt: "Suggest a corner kick routine that exploits a back-post overload." },
+            ].map(({ label, prompt }) => (
+              <button
+                key={label}
+                onClick={() => handleSendChat(prompt)}
+                className="px-2.5 py-1 text-[10px] font-medium rounded-full bg-gray-900 hover:bg-emerald-950/60 hover:text-emerald-300 hover:border-emerald-800/60 text-gray-300 cursor-pointer border border-gray-800 transition-colors"
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Chat input box */}
-        <div className="p-4 border-t border-gray-900 bg-gray-950">
-          <div className="flex items-center gap-2">
+        {/* Free-form chat input */}
+        <div className="p-3 border-t border-gray-900 bg-gray-950">
+          <p className="text-[9px] font-mono text-gray-500 uppercase tracking-wider mb-2">
+            Ask anything
+          </p>
+          <div className="flex gap-2">
             <input
               id="input-coach-chat"
               type="text"
-              placeholder="Ask AI Coach (e.g. My striker is isolated)..."
+              placeholder="e.g. Why is my striker getting isolated?"
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSendChat()}
-              className="flex-1 bg-gray-900 hover:bg-gray-850 focus:bg-gray-900 border border-gray-800 focus:border-emerald-500 focus:outline-none rounded-md py-2 px-3 text-xs text-white"
+              onKeyDown={(e) => e.key === "Enter" && !loadingAi && handleSendChat()}
+              className="flex-1 min-w-0 bg-gray-900 border border-gray-800 focus:border-emerald-500 focus:outline-none rounded-lg py-2 px-3 text-xs text-white placeholder:text-gray-600 transition-colors"
             />
             <button
               id="btn-send-coach-chat"
               onClick={() => handleSendChat()}
-              disabled={loadingAi}
-              className="p-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md transition cursor-pointer shadow disabled:opacity-50"
+              disabled={loadingAi || !chatInput.trim()}
+              aria-label="Send message to AI coach"
+              className="shrink-0 p-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg transition cursor-pointer shadow"
             >
               <ArrowRight className="w-4 h-4" />
             </button>
