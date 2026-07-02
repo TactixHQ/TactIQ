@@ -1,44 +1,58 @@
-# [Project name]
+# TactIQ — Football Tactics Platform
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A full-stack football tactics and coaching platform for grassroots and semi-pro coaches. Features an interactive drag-and-drop tactics board, AI match simulator, squad workspace, AI match brain insights, and a community explore page.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/api-server run dev` — run the API server (port 8080)
+- `pnpm --filter @workspace/tactiq run dev` — run the frontend (port varies, see workflow)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- Required env: `GEMINI_API_KEY` — Google Gemini API key for AI features
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- Frontend: React 19 + Vite 7 + Tailwind CSS v4
+- API: Express 5 at `artifacts/api-server`
+- AI: Google Gemini 2.5 Flash via `@google/genai` SDK
+- No database — app uses `localStorage` for all persistence
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/tactiq/src/App.tsx` — root app state, routing, localStorage management
+- `artifacts/tactiq/src/types.ts` — all shared TypeScript types
+- `artifacts/tactiq/src/components/` — all 6 page components (Sidebar, HomeDashboard, TacticsBoard, MatchSimulator, TeamWorkspace, ExploreCommunity)
+- `artifacts/api-server/src/routes/gemini.ts` — all 4 Gemini AI routes
+- `artifacts/api-server/src/routes/index.ts` — route mounting
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- **localStorage-only persistence** — No DB needed; all state (tactics, players, matches, sessions) stored in browser localStorage with seed data on first load.
+- **Gemini 2.5 Flash** — All AI routes use `gemini-2.5-flash` model (NOT gemini-3.5 which doesn't exist).
+- **`motion/react` aliased to `framer-motion`** — The source code used `motion/react` imports; Vite alias in `vite.config.ts` maps this to `framer-motion` which is installed.
+- **AI route fallbacks** — All 4 Gemini routes have rich local fallback logic so the app works gracefully even if AI fails or the key is missing.
+- **FORMATION_COORDINATES exported** — `TacticsBoard.tsx` exports `FORMATION_COORDINATES` so `App.tsx` can use it for seeding new tactics.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- **Home Dashboard** — Daily Match Brain AI insights from logged match history; streak + tactical rating gamification; quick access to recent tactics.
+- **Tactics Board** — Interactive drag-and-drop pitch with 4 formations (4-3-3, 3-5-2, 4-4-2, 4-2-3-1), press zones, defensive lines, text labels, tactical arrows, and AI Coach chat.
+- **Match Simulator** — Tactical matchup simulator with AI narrative analysis comparing two formations and play styles.
+- **Team Workspace** — Squad roster management with player attribute radar charts, match log history with AI debrief, and AI training session builder.
+- **Explore Community** — Community tactics feed, weekly challenges, and formation templates.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- AI uses GEMINI_API_KEY directly (not Replit AI Integration proxy)
+- No external DB — localStorage only
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Do NOT add `@workspace/db` dependency to `api-server` Gemini routes — no DB is used.
+- The `motion/react` Vite alias must stay in `vite.config.ts` or motion animations will break.
+- Always use `gemini-2.5-flash` model name — other model strings will error.
+- API server must be rebuilt (`pnpm run build`) when routes change — dev script does this automatically.
 
 ## Pointers
 
