@@ -14,7 +14,6 @@ import {
   BookOpen,
   Maximize2,
   CheckCircle,
-  Hexagon,
   Move,
   Type as TextIcon,
   CircleDot,
@@ -24,6 +23,7 @@ import {
   ZoomOut
 } from "lucide-react";
 import { Tactic, Player, TacticalArrow, PressZone, TextLabel, TacticPhase } from "../types";
+import { LogoIcon } from "./Logo";
 
 // Standard Formations Database
 export const FORMATION_COORDINATES: Record<string, { role: "GK" | "DEF" | "MID" | "ATT"; pos: string; x: number; y: number; name: string }[]> = {
@@ -1494,7 +1494,7 @@ export default function TacticsBoard({
       <div className={`w-full lg:w-96 border-l border-gray-900 flex flex-col justify-between bg-gray-950 shrink-0 h-full lg:h-full ${mobileTab === "coach" ? "flex" : "hidden lg:flex"}`}>
         <div className="p-4 border-b border-gray-900 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Brain className="w-5 h-5 text-emerald-400" />
+            <LogoIcon className="w-5 h-5" />
             <h3 className="font-bold text-white text-sm">Match Brain Assistant</h3>
           </div>
           <span className="text-[10px] font-mono text-gray-500 bg-gray-900 px-2 py-0.5 rounded border border-gray-800">

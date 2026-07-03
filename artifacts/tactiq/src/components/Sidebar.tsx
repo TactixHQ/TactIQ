@@ -8,9 +8,9 @@ import {
   Sparkles,
   User,
   ChevronLeft,
-  ChevronRight,
-  Hexagon
+  ChevronRight
 } from "lucide-react";
+import { LogoIcon } from "./Logo";
 
 interface SidebarProps {
   currentView: string;
@@ -52,8 +52,8 @@ export default function Sidebar({
               className="flex items-center gap-2.5 min-w-0 cursor-pointer"
               aria-label="Go to home"
             >
-              <div className="shrink-0 text-emerald-400 p-1.5 bg-emerald-950/60 rounded-lg border border-emerald-900/50">
-                <Hexagon className="w-4 h-4" />
+              <div className="shrink-0 p-1 bg-emerald-950/60 rounded-lg border border-emerald-900/50">
+                <LogoIcon className="w-5 h-5" />
               </div>
               {expanded && (
                 <span className="font-display font-bold text-base text-white tracking-tight truncate">

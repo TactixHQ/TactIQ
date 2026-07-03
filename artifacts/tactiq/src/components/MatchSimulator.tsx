@@ -4,7 +4,6 @@ import {
   Sparkles, 
   TrendingUp, 
   HelpCircle, 
-  Hexagon, 
   Share2, 
   Download, 
   RotateCcw,
@@ -12,6 +11,7 @@ import {
   Info
 } from "lucide-react";
 import { MatchSimulationInput, SimulationResult } from "../types";
+import { LogoIcon } from "./Logo";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -205,6 +205,7 @@ export default function MatchSimulator() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-gray-800/80 pb-6">
         <div>
+          <LogoIcon className="w-8 h-8 mb-3" />
           <div className="flex items-center gap-2 mb-2">
             <Zap className="w-4 h-4 text-amber-400" />
             <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-amber-400">

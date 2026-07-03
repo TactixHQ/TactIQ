@@ -21,6 +21,7 @@ import {
   Gauge
 } from "lucide-react";
 import { Player, FootballMatch, TrainingSession, SessionDrill } from "../types";
+import { LogoIcon } from "./Logo";
 import {
   ResponsiveContainer,
   RadarChart,
@@ -642,6 +643,7 @@ export default function TeamWorkspace({
       {/* Tab Navigation header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-gray-800 pb-4 gap-4">
         <div>
+          <LogoIcon className="w-8 h-8 mb-3" />
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/40 px-2.5 py-1 rounded border border-emerald-900/40">
             Manager Workspace
           </span>

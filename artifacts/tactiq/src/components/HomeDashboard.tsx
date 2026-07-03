@@ -11,6 +11,7 @@ import {
   BookOpen
 } from "lucide-react";
 import { FootballMatch, Tactic } from "../types";
+import { LogoFull } from "./Logo";
 
 interface HomeDashboardProps {
   tactics: Tactic[];
@@ -125,6 +126,7 @@ export default function HomeDashboard({
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-800/80 pb-6">
         <div>
+          <LogoFull className="h-7 md:h-8 mb-3" />
           <h1 className="text-2xl md:text-3xl font-display font-bold tracking-tight text-white">
             {getGreeting()}, Coach.
           </h1>

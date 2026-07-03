@@ -12,6 +12,7 @@ import {
   Zap
 } from "lucide-react";
 import { toast } from "./Toast";
+import { LogoIcon } from "./Logo";
 
 interface ExploreCommunityProps {
   onStartChallenge: () => void;
@@ -161,6 +162,7 @@ export default function ExploreCommunity({
 
       {/* ── Header ── */}
       <div className="border-b border-gray-800/80 pb-5">
+        <LogoIcon className="w-8 h-8 mb-3" />
         <div className="flex items-center gap-2 mb-2">
           <Compass className="w-4 h-4 text-indigo-400" />
           <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-indigo-400">
