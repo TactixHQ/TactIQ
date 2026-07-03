@@ -89,7 +89,10 @@ router.post("/gemini/coach", async (req, res) => {
   const getDynamicLocal = () => fallbacks[Math.abs(userPrompt.length) % fallbacks.length];
 
   const ai = getGeminiClient();
-  if (!ai) return res.json({ text: getDynamicLocal() });
+  if (!ai) {
+    res.json({ text: getDynamicLocal() });
+    return;
+  }
 
   try {
     const systemInstruction = `You are TactIQ AI, an elite professional football tactics coach and senior match analyst. You speak directly, constructively, and specifically. Never give vague, generic advice. Strictly enforce a MAXIMUM limit of 120 words. Always end with exactly one direct, actionable prompt/question to guide the coach to their next tactical move. Context: Tactic "${title}", Formation: "${formation}", Phase: "${phaseName}". Use this context to address the user's inquiry.`;
@@ -128,7 +131,10 @@ router.post("/gemini/simulate", async (req, res) => {
   };
 
   const ai = getGeminiClient();
-  if (!ai) return res.json(getDynamicLocal());
+  if (!ai) {
+    res.json(getDynamicLocal());
+    return;
+  }
 
   try {
     const systemInstruction = `You are TactIQ AI, a world-class football tactical simulator. Based on raw computed stats, formations, and styles, write an elite tactical narrative explaining precisely WHY the matchup results in these stats. Use clear tactical concepts (overloads, transition traps, positional play, half-spaces). Strictly keep the narrative around 120 words. Do not hallucinate random stats; stick to the provided simulation statistics. Also provide 1 specific, highly targeted tactical adjustment the Home manager could execute.`;
@@ -189,7 +195,10 @@ router.post("/gemini/training", async (req, res) => {
   });
 
   const ai = getGeminiClient();
-  if (!ai) return res.json(getDynamicLocal());
+  if (!ai) {
+    res.json(getDynamicLocal());
+    return;
+  }
 
   try {
     const systemInstruction = `You are TactIQ AI, an elite UEFA Pro license coaching educator. Generate an outstanding, professional, structured football training session plan. Generate a sequence of 3 highly logical drills: 1. Warm-up (20% duration), 2. Technical/Tactical Theme Drill (50% duration), 3. Conditioned Scrimmage (30% duration). Each drill must include a professional name, precise duration (minutes), specific setup description, actionable coaching cues, and required training equipment. Format as clean structured JSON.`;
@@ -256,7 +265,10 @@ router.post("/gemini/insights", async (req, res) => {
   };
 
   const ai = getGeminiClient();
-  if (!ai) return res.json(getDynamicLocal());
+  if (!ai) {
+    res.json(getDynamicLocal());
+    return;
+  }
 
   try {
     const matchSummary = matches

@@ -19,7 +19,9 @@ import {
   Type as TextIcon,
   CircleDot,
   ArrowUpRight,
-  Brain
+  Brain,
+  ZoomIn,
+  ZoomOut
 } from "lucide-react";
 import { Tactic, Player, TacticalArrow, PressZone, TextLabel, TacticPhase } from "../types";
 
@@ -193,6 +195,35 @@ export default function TacticsBoard({
   // SVG Pitch Ref for coordinate mapping
   const pitchRef = useRef<HTMLDivElement>(null);
 
+  // Zoom & Pan state for the tactical pitch
+  const [zoomLevel, setZoomLevel] = useState<number>(1);
+  const [panOffset, setPanOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const pinchStartRef = useRef<{ dist: number; zoom: number } | null>(null);
+
+  const MIN_ZOOM = 0.6;
+  const MAX_ZOOM = 2.5;
+
+  const clampZoom = (z: number) => Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, z));
+
+  const zoomIn = () => setZoomLevel(z => clampZoom(parseFloat((z + 0.2).toFixed(2))));
+  const zoomOut = () => setZoomLevel(z => clampZoom(parseFloat((z - 0.2).toFixed(2))));
+  const resetZoom = () => {
+    setZoomLevel(1);
+    setPanOffset({ x: 0, y: 0 });
+  };
+
+  const handlePitchWheel = (e: React.WheelEvent) => {
+    if (!e.ctrlKey && !e.metaKey) return;
+    e.preventDefault();
+    setZoomLevel(z => clampZoom(parseFloat((z - e.deltaY * 0.001).toFixed(2))));
+  };
+
+  const getTouchDistance = (touches: React.TouchList) => {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.hypot(dx, dy);
+  };
+
   // Reset idle timer on player drags
   const resetIdleTimer = () => {
     setShowIdleNudge(false);
@@ -349,6 +380,12 @@ export default function TacticsBoard({
 
   // Drag Handlers
   const handlePitchStart = (e: React.MouseEvent | React.TouchEvent) => {
+    // Two-finger pinch-to-zoom start
+    if ("touches" in e && e.touches.length === 2) {
+      pinchStartRef.current = { dist: getTouchDistance(e.touches), zoom: zoomLevel };
+      return;
+    }
+
     resetIdleTimer();
     const coords = getCoordinates(e);
     if (!coords) return;
@@ -426,6 +463,15 @@ export default function TacticsBoard({
   };
 
   const handlePitchMove = (e: React.MouseEvent | React.TouchEvent) => {
+    // Two-finger pinch-to-zoom move
+    if ("touches" in e && e.touches.length === 2 && pinchStartRef.current) {
+      if (e.cancelable) e.preventDefault();
+      const newDist = getTouchDistance(e.touches);
+      const ratio = newDist / pinchStartRef.current.dist;
+      setZoomLevel(clampZoom(parseFloat((pinchStartRef.current.zoom * ratio).toFixed(2))));
+      return;
+    }
+
     if (!draggingPlayerId && !draggingZoneId && !draggingLabelId && !draggingDefensiveLine) return;
     
     // Lock viewport scrolling on iOS Safari while actively dragging tactics!
@@ -460,6 +506,7 @@ export default function TacticsBoard({
   };
 
   const handlePitchEnd = () => {
+    pinchStartRef.current = null;
     setDraggingPlayerId(null);
     setDraggingZoneId(null);
     setDraggingLabelId(null);
@@ -1115,16 +1162,56 @@ export default function TacticsBoard({
           </div>
         </div>
 
-        {/* PITCH VISUAL CONTAINER */}
-        <div 
-          ref={pitchRef}
-          onMouseMove={handlePitchMove}
-          onTouchMove={handlePitchMove}
-          onMouseUp={handlePitchEnd}
-          onTouchEnd={handlePitchEnd}
-          className="football-pitch flex-1 w-full my-4 relative touch-none"
-          style={{ minHeight: "500px" }}
-        >
+        {/* PITCH ZOOM/PAN WRAPPER */}
+        <div className="relative flex-1 w-full my-4 overflow-hidden rounded-lg" style={{ minHeight: "500px" }}>
+          {/* Zoom Controls */}
+          <div className="absolute top-2 right-2 z-30 flex flex-col gap-1 bg-gray-950/90 border border-gray-800 rounded-lg p-1 shadow-lg">
+            <button
+              id="btn-pitch-zoom-in"
+              onClick={zoomIn}
+              disabled={zoomLevel >= MAX_ZOOM}
+              aria-label="Zoom in on pitch"
+              title="Zoom in"
+              className="p-1.5 rounded hover:bg-gray-800 text-gray-300 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+            >
+              <ZoomIn className="w-3.5 h-3.5" />
+            </button>
+            <button
+              id="btn-pitch-zoom-out"
+              onClick={zoomOut}
+              disabled={zoomLevel <= MIN_ZOOM}
+              aria-label="Zoom out on pitch"
+              title="Zoom out"
+              className="p-1.5 rounded hover:bg-gray-800 text-gray-300 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+            >
+              <ZoomOut className="w-3.5 h-3.5" />
+            </button>
+            <button
+              id="btn-pitch-zoom-reset"
+              onClick={resetZoom}
+              aria-label="Reset pitch zoom"
+              title="Reset zoom"
+              className="p-1.5 rounded hover:bg-gray-800 text-gray-300 hover:text-white cursor-pointer border-t border-gray-800"
+            >
+              <Maximize2 className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          {zoomLevel !== 1 && (
+            <div className="absolute top-2 left-2 z-30 text-[10px] font-mono bg-gray-950/90 border border-gray-800 rounded px-2 py-1 text-emerald-400">
+              {Math.round(zoomLevel * 100)}%
+            </div>
+          )}
+
+          <div
+            ref={pitchRef}
+            onMouseMove={handlePitchMove}
+            onTouchMove={handlePitchMove}
+            onMouseUp={handlePitchEnd}
+            onTouchEnd={handlePitchEnd}
+            onWheel={handlePitchWheel}
+            className="football-pitch w-full h-full relative touch-none"
+            style={{ minHeight: "500px", transform: `scale(${zoomLevel})`, transformOrigin: "center center", transition: pinchStartRef.current ? "none" : "transform 0.15s ease-out" }}
+          >
           {/* Pitch Markings */}
           <div className="pitch-center-line" />
           <div className="pitch-center-circle" />
@@ -1364,6 +1451,7 @@ export default function TacticsBoard({
               </motion.div>
             );
           })}
+          </div>
         </div>
 
         {/* Dynamic 8-Second Idle Nudge Box */}

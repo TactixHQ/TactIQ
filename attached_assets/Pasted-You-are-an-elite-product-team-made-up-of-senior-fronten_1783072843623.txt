@@ -1,0 +1,176 @@
+You are an elite product team made up of senior frontend engineers, backend engineers, UX designers, UI designers, sports scientists, professional football coaches, performance engineers, AI engineers, accessibility experts and quality assurance specialists.
+
+Your objective is to transform TactIQ into a world-class football tactics platform while preserving all existing functionality.
+
+Core Rules
+
+* Do NOT remove any existing features.
+* Do NOT break the application.
+* Do NOT remove pages.
+* Do NOT change navigation behaviour.
+* Keep the existing bottom navigation.
+* Maintain compatibility with mobile, tablet and desktop.
+* Improve only where it adds value.
+
+Product Vision
+
+TactIQ should feel modern, intuitive, fast, trustworthy, and professional. Every interaction should help users focus on football tactics and team improvement.
+
+User Experience
+
+Review every page and improve:
+
+* Navigation clarity
+* Layout and spacing
+* Typography hierarchy
+* Button consistency
+* Card design
+* Forms
+* Empty states
+* Loading states
+* Error messages
+* Success feedback
+* Animations
+* Transitions
+* Overall polish
+
+Mobile First
+
+Optimise the app for phones first.
+
+Ensure:
+
+* Large touch targets
+* Smooth scrolling
+* Fast loading
+* Responsive layouts
+* Excellent usability on smaller screens
+
+Visual Design
+
+Create one consistent design system.
+
+Use:
+
+* Premium dark theme
+* Emerald green accents
+* Clean modern typography
+* Rounded cards and buttons
+* Consistent spacing
+* Subtle shadows
+* Smooth animations
+* Professional icons
+* Clear visual hierarchy
+
+Home Page
+
+Improve the dashboard by making important information easier to find.
+
+Prioritise:
+
+* AI insights
+* Saved tactics
+* Recent activity
+* Quick actions
+* Favourite formations
+* Team overview
+* Match preparation
+* Training suggestions
+
+Tactical Board
+
+Improve:
+
+* Drag-and-drop responsiveness
+* Player movement
+* Formation switching
+* Drawing tools
+* Undo and redo
+* Zoom and pan
+* Performance
+* Touch controls
+
+Keep the interface clean and responsive.
+
+AI Features
+
+Improve usability by:
+
+* Making prompts clearer
+* Providing actionable tactical advice
+* Explaining AI suggestions in simple language
+* Improving loading feedback
+* Handling errors gracefully
+
+Performance
+
+Optimise:
+
+* Rendering speed
+* Component structure
+* Lazy loading
+* Image optimisation (if applicable)
+* State management
+* Code splitting
+* Bundle size
+* Memory usage
+
+Accessibility
+
+Improve:
+
+* Colour contrast
+* Keyboard navigation where appropriate
+* Screen reader labels
+* Focus states
+* Text scaling support
+
+Code Quality
+
+Refactor where appropriate:
+
+* Remove unused code
+* Reduce duplication
+* Improve readability
+* Use reusable components
+* Follow TypeScript best practices
+
+Reliability
+
+Find and fix:
+
+* Bugs
+* Console warnings
+* Layout issues
+* Overflow problems
+* Responsive issues
+* Broken links
+* Missing error handling
+
+Security
+
+Review the project for common security issues:
+
+* Protect API keys
+* Validate inputs
+* Handle errors safely
+* Avoid exposing sensitive information
+
+Future Readiness
+
+Structure the codebase so it is easier to expand with future features without changing current functionality.
+
+Final Quality Check
+
+Before completing the task:
+
+* Test every page
+* Test every button
+* Test every navigation item
+* Test every AI feature
+* Test responsive layouts
+* Verify visual consistency
+* Fix any issues found
+* Ensure there are no regressions
+
+Only finish when the application feels polished, cohesive, responsive, maintainable, and ready for real users.

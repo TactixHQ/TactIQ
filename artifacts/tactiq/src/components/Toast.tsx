@@ -7,26 +7,35 @@ interface ToastItem {
   id: number;
   message: string;
   description?: string;
+  duration?: number;
   type: ToastType;
 }
 
+interface ToastOptions {
+  description?: string;
+  duration?: number;
+}
+
 interface ToastAPI {
-  success: (message: string, opts?: { description?: string }) => void;
-  error: (message: string, opts?: { description?: string }) => void;
-  info: (message: string, opts?: { description?: string }) => void;
-  show: (message: string, opts?: { description?: string }) => void;
+  (message: string, opts?: ToastOptions): void;
+  success: (message: string, opts?: ToastOptions) => void;
+  error: (message: string, opts?: ToastOptions) => void;
+  info: (message: string, opts?: ToastOptions) => void;
+  show: (message: string, opts?: ToastOptions) => void;
 }
 
 const ToastCtx = createContext<ToastAPI | null>(null);
 
 let _addToast: ((item: Omit<ToastItem, "id">) => void) | null = null;
 
-export const toast: ToastAPI = {
-  success: (message, opts) => _addToast?.({ message, type: "success", ...opts }),
-  error: (message, opts) => _addToast?.({ message, type: "error", ...opts }),
-  info: (message, opts) => _addToast?.({ message, type: "info", ...opts }),
-  show: (message, opts) => _addToast?.({ message, type: "default", ...opts }),
-};
+const toastFn = ((message: string, opts?: ToastOptions) =>
+  _addToast?.({ message, type: "default", ...opts })) as ToastAPI;
+toastFn.success = (message, opts) => _addToast?.({ message, type: "success", ...opts });
+toastFn.error = (message, opts) => _addToast?.({ message, type: "error", ...opts });
+toastFn.info = (message, opts) => _addToast?.({ message, type: "info", ...opts });
+toastFn.show = (message, opts) => _addToast?.({ message, type: "default", ...opts });
+
+export const toast: ToastAPI = toastFn;
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
@@ -37,7 +46,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     setToasts(prev => [...prev.slice(-3), { id, ...item }]);
     setTimeout(() => {
       setToasts(prev => prev.filter(t => t.id !== id));
-    }, 3500);
+    }, item.duration ?? 3500);
   }, []);
 
   useEffect(() => {
