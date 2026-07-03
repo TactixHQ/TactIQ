@@ -631,7 +631,7 @@ export default function TacticsBoard({
   };
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen bg-gray-950 text-gray-100 overflow-hidden select-none">
+    <div className="flex flex-col lg:flex-row h-full bg-gray-950 text-gray-100 overflow-hidden select-none">
       
       {/* Mobile Tab Switcher */}
       <div className="lg:hidden flex border-b border-gray-900 bg-gray-950 sticky top-0 z-50 p-2.5 gap-1.5 shrink-0">

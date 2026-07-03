@@ -263,23 +263,21 @@ export default function App() {
   return (
     <ToastProvider>
     <div className="flex h-screen w-screen overflow-hidden bg-gray-950 font-sans text-gray-200">
-      {currentView !== "board" && (
-        <Sidebar
-          currentView={currentView}
-          onNavigate={(view) => {
-            setCurrentView(view);
-            if (view !== "board") {
-              setActiveTacticId(null);
-            }
-          }}
-          isPro={isPro}
-          onTogglePro={() => {
-            const next = !isPro;
-            setIsPro(next);
-            localStorage.setItem("tactiq_pro", next.toString());
-          }}
-        />
-      )}
+      <Sidebar
+        currentView={currentView}
+        onNavigate={(view) => {
+          setCurrentView(view);
+          if (view !== "board") {
+            setActiveTacticId(null);
+          }
+        }}
+        isPro={isPro}
+        onTogglePro={() => {
+          const next = !isPro;
+          setIsPro(next);
+          localStorage.setItem("tactiq_pro", next.toString());
+        }}
+      />
 
       <main className="flex-1 overflow-y-auto pb-16 md:pb-0 h-full">
         {currentView === "home" && (
