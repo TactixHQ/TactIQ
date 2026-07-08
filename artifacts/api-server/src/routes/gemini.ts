@@ -15,7 +15,14 @@ interface SimStats {
   pressSuccessHome: number;
   pressSuccessAway: number;
   spaceInFinalThird: "Low" | "Medium" | "High";
-  vulnerableZones: { name: string; description: string; x: number; y: number; width: number; height: number }[];
+  vulnerableZones: {
+    name: string;
+    description: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }[];
 }
 
 function runTacticalSimulation(
@@ -75,38 +82,105 @@ function runTacticalSimulation(
 
 // 1. AI Coach endpoint
 router.post("/gemini/coach", async (req, res) => {
+  console.log("AI Coach endpoint hit");
+  
   const { activeTactic, currentPhase, prompt } = req.body;
+
   const formation = activeTactic?.formation || "4-3-3";
   const title = activeTactic?.title || "Untitled Tactic";
   const phaseName = currentPhase?.name || "Attack";
-  const userPrompt = prompt || "Analyze my current formation and give a suggestion.";
+  const userPrompt =
+    prompt || "Analyze my current formation and give a suggestion.";
 
   const fallbacks = [
     `TactIQ Coach: For your ${formation} in the ${phaseName} phase, ensure your central pivot players are positioned defensively to prevent quick counters. If the opposition plays a low block, encourage fullbacks to push high and offer width to stretch their compact lines. Shall we add a high press zone on the board?`,
     `TactIQ Coach: Looking at "${title}" (${formation}) during ${phaseName}, my top recommendation is to ensure wingers and advanced midfielders coordinate to create overloads in the half-spaces. Keep the defensive line high to compress space between the lines. How would you like to tweak the pressing zone?`,
     `TactIQ Coach: On this ${formation} setup for "${title}", the defensive line height is critical during the ${phaseName} phase. Ensure central defenders drop quickly if the opponent bypasses your first line of press. Adjust player roles or rename note labels to make instructions clearer?`
   ];
-  const getDynamicLocal = () => fallbacks[Math.abs(userPrompt.length) % fallbacks.length];
+
+  const getDynamicLocal = () =>
+    fallbacks[Math.abs(userPrompt.length) % fallbacks.length];
 
   const ai = getGeminiClient();
+
   if (!ai) {
     res.json({ text: getDynamicLocal() });
     return;
   }
 
   try {
-    const systemInstruction = `You are TactIQ AI, an elite professional football tactics coach and senior match analyst. You speak directly, constructively, and specifically. Never give vague, generic advice. Strictly enforce a MAXIMUM limit of 120 words. Always end with exactly one direct, actionable prompt/question to guide the coach to their next tactical move. Context: Tactic "${title}", Formation: "${formation}", Phase: "${phaseName}". Use this context to address the user's inquiry.`;
+    const activePhaseData =
+      activeTactic?.phases?.find(
+        (p: any) => p.id === activeTactic.activePhaseId
+      ) || currentPhase;
+
+    const systemInstruction = `
+You are TactIQ AI, an elite UEFA-level football tactics coach and match analyst.
+
+Rules:
+- Analyse the actual tactical board data provided.
+- Never give vague generic advice.
+- Reference player positioning, spacing, pressing zones, arrows, defensive line and tactical notes when relevant.
+- Do not invent information that is not present.
+- Keep responses under 120 words.
+- End with exactly one actionable coaching question.
+`;
+
+    const coachPrompt = `
+TACTICAL CONTEXT
+
+Tactic:
+${title}
+
+Formation:
+${formation}
+
+Phase:
+${phaseName}
+
+PLAYERS:
+${JSON.stringify(activePhaseData?.canvasData?.players ?? [], null, 2)}
+
+ARROWS:
+${JSON.stringify(activePhaseData?.canvasData?.arrows ?? [], null, 2)}
+
+PRESS ZONES:
+${JSON.stringify(activePhaseData?.canvasData?.zones ?? [], null, 2)}
+
+DEFENSIVE LINE:
+${JSON.stringify(activePhaseData?.canvasData?.defensiveLine ?? {}, null, 2)}
+
+TACTICAL NOTES:
+${JSON.stringify(activePhaseData?.canvasData?.labels ?? [], null, 2)}
+
+COACH QUESTION:
+${userPrompt}
+
+Analyse the board above and provide a specific tactical recommendation.
+`;
+
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: userPrompt,
-      config: { systemInstruction, temperature: 0.7 },
+      contents: coachPrompt,
+      config: {
+        systemInstruction,
+        temperature: 0.7,
+      },
     });
-    res.json({ text: response.text });
-  } catch {
-    res.json({ text: getDynamicLocal() });
+
+    res.json({
+      text: response.text ?? "No response generated.",
+    });
+
+  } catch (error) {
+    console.error("Gemini Coach Error:", error);
+
+    res.status(500).json({
+      text: getDynamicLocal(),
+      error: error instanceof Error ? error.message : String(error),
+    });
   }
 });
-
 // 2. AI Match Simulator endpoint
 router.post("/gemini/simulate", async (req, res) => {
   const { homeFormation, awayFormation, homeStyle, awayStyle, homeAdvantage, missingPlayer } = req.body;
