@@ -1,12 +1,14 @@
 import tactiqIcon from "../assets/tactiq-icon.png";
-import tactiqFullLogo from "../assets/tactiq-logo-full.png";
 
 interface LogoIconProps {
   className?: string;
   alt?: string;
 }
 
-export function LogoIcon({ className = "w-8 h-8", alt = "TactIQ" }: LogoIconProps) {
+export function LogoIcon({
+  className = "w-8 h-8",
+  alt = "TactIQ",
+}: LogoIconProps) {
   return (
     <img
       src={tactiqIcon}
@@ -22,10 +24,13 @@ interface LogoFullProps {
   alt?: string;
 }
 
-export function LogoFull({ className = "h-8", alt = "TactIQ — Smarter Tactics. Better Teams." }: LogoFullProps) {
+export function LogoFull({
+  className = "h-8",
+  alt = "TactIQ — Smarter Tactics. Better Teams.",
+}: LogoFullProps) {
   return (
     <img
-      src={tactiqFullLogo}
+      src={tactiqIcon}
       alt={alt}
       className={`object-contain shrink-0 ${className}`}
       draggable={false}
