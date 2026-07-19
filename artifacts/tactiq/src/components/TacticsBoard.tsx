@@ -1493,7 +1493,7 @@ export default function TacticsBoard({
       </div>
 
       {/* RIGHT AI COACH SIDEBAR PANEL */}
-      <div className={`w-full lg:w-96 border-l border-gray-900 flex flex-col justify-between bg-gray-950 shrink-0 h-full lg:h-full ${mobileTab === "coach" ? "flex" : "hidden lg:flex"}`}>
+      <div className={`w-full lg:w-96 border-l border-gray-900 flex flex-col min-h-0 bg-gray-950 shrink-0 h-full lg:h-full ${mobileTab === "coach" ? "flex" : "hidden lg:flex"}`}>
         <div className="p-4 border-b border-gray-900 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <LogoIcon className="w-5 h-5" />
@@ -1560,7 +1560,7 @@ export default function TacticsBoard({
         </div>
 
         {/* Free-form chat input */}
-        <div className="p-3 border-t border-gray-900 bg-gray-950">
+        <div className="p-3 border-t border-gray-900 bg-gray-950 shrink-0">
           <p className="text-[9px] font-mono text-gray-500 uppercase tracking-wider mb-2">
             Ask anything
           </p>
