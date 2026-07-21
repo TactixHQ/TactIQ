@@ -1560,7 +1560,7 @@ export default function TacticsBoard({
         </div>
 
         {/* Free-form chat input */}
-        <div className="p-3 border-t border-gray-900 bg-gray-950 shrink-0">
+        <div className="p-3 pb-24 border-t border-gray-900 bg-gray-950 shrink-0">
           <p className="text-[9px] font-mono text-gray-500 uppercase tracking-wider mb-2">
             Ask anything
           </p>
